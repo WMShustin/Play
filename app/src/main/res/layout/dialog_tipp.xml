@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_large">
+
+    <ImageView
+        android:id="@+id/dlg_one_button_iv_icon"
+        android:layout_width="@dimen/dlg_one_button_icon_size"
+        android:layout_height="@dimen/dlg_one_button_icon_size"
+        android:layout_marginBottom="@dimen/spacing_huge"
+        android:contentDescription="@string/content_description_base_dialog_icon"
+        android:src="@drawable/ic_checked" />
+
+    <TextView
+        android:id="@+id/tipp_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:ellipsize="end"
+        android:fontFamily="@string/font_family_black"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textAllCaps="true"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="SUCCESS!" />
+
+    <TextView
+        android:id="@+id/tipp_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_huge"
+        android:fontFamily="@string/font_family_regular"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textColor="@color/grey_text"
+        android:textSize="16sp"
+        tools:text="Super success message" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <Button
+            android:id="@+id/tipp_ok"
+            style="@style/MediumButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="OK" />
+
+    </LinearLayout>
+
+</LinearLayout>

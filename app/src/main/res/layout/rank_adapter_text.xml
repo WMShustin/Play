@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="90">
+        <TextView
+            android:id="@+id/rank_username"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="60"
+            android:gravity="start"
+            android:textSize="22sp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/rank_points"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/rank_emoji"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="20"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:textColor="@color/black" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10">
+
+    </View>
+</LinearLayout>

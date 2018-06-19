@@ -1,0 +1,33 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#efefef</item>
+        <item name="colorPrimaryDark">#efefef </item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@drawable/start</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+        <item name="colorPrimary">@color/black_overlay</item>
+        <item name="colorPrimaryDark">@color/black_overlay</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="MediumButton" parent="@android:style/Widget.Button">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@string/font_family_light</item>
+        <item name="android:background">@drawable/outline_rounded</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
+
+</resources>

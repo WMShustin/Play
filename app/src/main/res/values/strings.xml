@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Play</string>
+
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+
+
+    <string name="act_main_title">Android: Creating Custom Dialogs</string>
+    <string name="act_main_message">This is an example of how to create your own dialogs, using a custom style and custom actions.</string>
+    <string name="act_main_success_button_text">Success Dialog</string>
+    <string name="act_main_error_button_text">Error Dialog</string>
+    <string name="act_main_yesno_button_text">Yes/No Dialog</string>
+
+    <!--Success Dialog-->
+    <string name="success_title">Oh Yeah!!</string>
+    <string name="success_message">Whatever you did, it was a huge success =D.</string>
+    <string name="success_button_text">OK, Cool</string>
+    <string name="content_description_base_dialog_icon">Imagem do Diálogo</string>
+
+    <!--Error Dialog-->
+    <string name="error_title">Oh snap :/</string>
+    <string name="error_message">Something went terribly wrong\n(probably my fault)</string>
+    <string name="error_button_text">OK, no problem</string>
+
+</resources>
