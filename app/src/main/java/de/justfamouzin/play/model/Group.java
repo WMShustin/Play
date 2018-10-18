@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import de.justfamouzin.play.Play;
+
 /**
  * @author Justin@Famouz
  */
@@ -16,7 +18,6 @@ public class Group {
 
     private String name;
     private Team winner;
-    private Team runnerup;
     private List<Game> matches = Lists.newArrayList();
     private List<Team> teams = Lists.newArrayList();
     private boolean ko;
@@ -26,22 +27,31 @@ public class Group {
     }
 
     public Group(JsonObject jsonObject, boolean ko) {
+        this.ko = ko;
         this.name = jsonObject.get("name").getAsString();
         matches = initMatches(jsonObject);
-        this.ko = ko;
+        if(isFinished() && name.equalsIgnoreCase("Final")) {
+            de.justfamouzin.play.Play.getInstance().setWm(Play.getInstance().getTeam(9));
+        }
     }
 
-    public List<Game> initMatches(JsonObject jsonObject) {
+    private List<Game> initMatches(JsonObject jsonObject) {
         List<Game> list = Lists.newArrayList();
         JsonArray jsonArray = jsonObject.get("matches").getAsJsonArray();
         for(int i = 0; i < jsonArray.size(); i++) {
             JsonObject jsonObject1 = jsonArray.get(i).getAsJsonObject();
             Game game = new Game(jsonObject1);
             Team home = game.getHome();
-            Team away = game.getHome();
-            if (!teams.contains(home)) teams.add(home);
-            if (!teams.contains(away)) teams.add(away);
-            if(!this.ko) addGroupStats(game);
+            Team away = game.getAway();
+            if(home != null)
+            if (!teams.contains(home))
+                teams.add(home);
+            if(away != null)
+            if (!teams.contains(away))
+                teams.add(away);
+            if(!this.ko) {
+                addGroupStats(game);
+            }
             list.add(game);
         }
         return list;
@@ -92,16 +102,24 @@ public class Group {
         return null;
     }
 
+    public boolean isKo() {
+        return ko;
+    }
+
+    public boolean isFinished() {
+        boolean finished = true;
+        for(Game game : getMatches()) {
+            if(!game.isFinished()) finished = false;
+        }
+        return finished;
+    }
+
     public String getName() {
         return name;
     }
 
     public List<Game> getMatches() {
         return matches;
-    }
-
-    public Team getRunnerup() {
-        return runnerup;
     }
 
     public Team getWinner() {

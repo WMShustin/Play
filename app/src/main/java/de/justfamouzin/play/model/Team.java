@@ -101,7 +101,12 @@ public class Team {
     public Team getBetterTeam(Team two) {
         if(getPoints() > two.getPoints()) return this;
         if(getPoints() < two.getPoints()) return two;
-        if(getGoals()-getAgainst() > two.getGoals()-two.getAgainst()) return this; else return two;
+        if(getGoals()-getAgainst() > two.getGoals()-two.getAgainst()) return this;
+        if(getGoals()-getAgainst() < two.getGoals()-two.getAgainst()) return two;
+        if(getGoals()-getAgainst() == two.getGoals()-two.getAgainst()) {
+            if(getGoals() > two.getGoals()) return this; else return two;
+        }
+        return this;
     }
 
     @Override

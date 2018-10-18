@@ -56,6 +56,9 @@ public class Play {
 
     public TeamBet teamBet;
 
+    public Team wm;
+    public boolean rightWmBet;
+
     public Play(Context context) {
         instance = this;
         stadiumList = Lists.newArrayList();
@@ -64,6 +67,7 @@ public class Play {
         bets = Lists.newArrayList();
         matches = Lists.newArrayList();
         playerList = Lists.newArrayList();
+        wm = null;
 
         this.util = Util.getInstance(context);
         this.requestQueue = util.getRequestQueue();
@@ -103,8 +107,8 @@ public class Play {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         stadiumList.addAll(util.initStadiums(jsonObject));
         teamList.addAll(util.initTeams(jsonObject));
+        groupList.addAll(util.initKnockouts(jsonObject));
         groupList.addAll(util.initGroups(jsonObject));
-        if(util.groupsFinished()) groupList.addAll(util.initKnockouts(jsonObject));
         matches.addAll(getAllMatches());
     }
 
@@ -130,6 +134,13 @@ public class Play {
         return null;
     }
 
+    public Group getGroup(String name) {
+        for(Group group : groupList) {
+            if(group.getName().equalsIgnoreCase(name)) return group;
+        }
+        return null;
+    }
+
     public List<Player> getPlayerList() {
         Collections.sort(playerList, new Comparator<Player>() {
             @Override
@@ -140,7 +151,6 @@ public class Play {
                     return 1;
             }
         });
-        Log.d("XXX", "XXX");
         return playerList;
     }
 
@@ -224,7 +234,6 @@ public class Play {
 
     public void setFirebaseUser(FirebaseUser firebaseUser) {
         this.firebaseUser = firebaseUser;
-        util.setUsername();
     }
 
     @Override
@@ -238,5 +247,21 @@ public class Play {
 
     public int getPoints() {
         return points;
+    }
+
+    public Team getWm() {
+        return wm;
+    }
+
+    public void setWm(Team wm) {
+        this.wm = wm;
+    }
+
+    public void setRightWmBet(boolean rightWmBet) {
+        this.rightWmBet = rightWmBet;
+    }
+
+    public boolean isRightWmBet() {
+        return rightWmBet;
     }
 }

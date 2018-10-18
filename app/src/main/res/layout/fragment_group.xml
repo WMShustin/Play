@@ -7,29 +7,21 @@
     android:layout_gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:layout_gravity="center">
-        <android.support.v7.widget.CardView
-            android:id="@+id/card"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="2dp"
+        card_view:cardPreventCornerOverlap="false"
+        android:layout_marginTop="56dp"
+        android:layout_margin="20dp"
+        card_view:cardBackgroundColor="@color/colorCardBack">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            card_view:cardCornerRadius="4dp"
-            card_view:cardElevation="2dp"
-            card_view:cardPreventCornerOverlap="false"
-            android:layout_marginTop="56dp"
-            android:layout_margin="20dp"
-            card_view:cardBackgroundColor="@color/colorCardBack">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/textGroupName"
                 android:layout_width="wrap_content"
@@ -41,29 +33,28 @@
                 android:fontFamily="sans-serif-condensed"
                 android:layout_marginTop="10dp"
                 android:textSize="32sp" />
-
             <TextView
                 android:id="@+id/teamEmojis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:layout_marginTop="8dp"
                 tools:text="TextView"
                 android:textColor="#fff"
                 android:textSize="24sp" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/cardList"
-                android:scrollbars="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
         </LinearLayout>
+    </android.support.v7.widget.CardView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cardList"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
     </LinearLayout>
 
 </LinearLayout>

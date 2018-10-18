@@ -1,5 +1,6 @@
 package de.justfamouzin.play.dialog;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -142,11 +143,16 @@ public class OneButtonDialog extends DialogFragment {
     @OnClick(R.id.dlg_one_button_btn_ok)
     public void onButtonClicked() {
         GameBet gameBet = new GameBet(game1.getName(), Integer.valueOf(homeResult.getText().toString()), Integer.valueOf(awayResult.getText().toString()));
-        Play.getInstance().getUtil().addData(gameBet);
-        adapter.notifyItemChanged(position, gameBet);
-        closeDialog();
-        if(buttonDialogAction != null) {
-            buttonDialogAction.onButtonClicked();
+        if(Play.getInstance().getUtil().timeLeft(game1)) {
+            ProgressDialog progressDialog = new ProgressDialog(getContext());
+            progressDialog.setMessage("Loading...");
+            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            Play.getInstance().getUtil().addData(gameBet, progressDialog, this, adapter, position);
+            if (buttonDialogAction != null) {
+                buttonDialogAction.onButtonClicked();
+            }
         }
     }
 

@@ -34,6 +34,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsViewHol
         public TextView gameEmojis, gameStadium, gameDate, gameBet;
         public CardView cardView;
         public Resources resources;
+        public GameBet gameBetObject;
         private int points;
 
         public CardsViewHolder(View view) {
@@ -50,21 +51,23 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsViewHol
         @Override
         public void onClick(final View view) {
             Game game = games.get(getAdapterPosition());
-            if (!game.isFinished()) {
-                if(Play.getInstance().getUtil().timeLeft(game)) {
-                    OneButtonDialog oneButtonDialog =
-                            DialogFactory.makeSuccessDialog(game, getAdapterPosition(), CardsAdapter.this);
-                    oneButtonDialog.show(fragmentManager, OneButtonDialog.TAG);
+            if(game.getHome() != null && game.getAway() != null) {
+                if (!game.isFinished()) {
+                    if (Play.getInstance().getUtil().timeLeft(game)) {
+                        OneButtonDialog oneButtonDialog =
+                                DialogFactory.makeSuccessDialog(game, getAdapterPosition(), CardsAdapter.this);
+                        oneButtonDialog.show(fragmentManager, OneButtonDialog.TAG);
+                    } else {
+                        Toast.makeText(view.getContext(), "Das Spiel läuft bereits", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(view.getContext(), "Das Spiel läuft bereits", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                if(points > 0) {
-                    TippDialog tippDialog = DialogFactory.winDialog(text[points], points);
-                    tippDialog.show(fragmentManager, TippDialog.TAG);
-                } else {
-                    TippDialog tippDialog = DialogFactory.loseDialog(text[points], points);
-                    tippDialog.show(fragmentManager, TippDialog.TAG);
+                    if (points > 0) {
+                        TippDialog tippDialog = DialogFactory.winDialog(text[points], points);
+                        tippDialog.show(fragmentManager, TippDialog.TAG);
+                    } else {
+                        TippDialog tippDialog = DialogFactory.loseDialog(text[points], points);
+                        tippDialog.show(fragmentManager, TippDialog.TAG);
+                    }
                 }
             }
         }
@@ -101,13 +104,16 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsViewHol
 
     private void onBind(CardsViewHolder cardsViewHolder) {
         Game game = games.get(cardsViewHolder.getAdapterPosition());
-        cardsViewHolder.gameEmojis.setText(game.getHome().getEmoji() + "  -  " + game.getAway().getEmoji());
-        cardsViewHolder.gameStadium.setText(game.getStadium().getName() + "\n" + game.getStadium().getCity());
+        String gameEmojis = (game.getHome() != null ? game.getHome().getEmoji() : "_") + "  -  " + (game.getAway() != null ? game.getAway().getEmoji() : "_");
+        cardsViewHolder.gameEmojis.setText(gameEmojis);
+        String gameStadium = game.getStadium().getName() + "\n" + game.getStadium().getCity();
+        cardsViewHolder.gameStadium.setText(gameStadium);
         String day = game.getDate().get(Calendar.DAY_OF_MONTH) < 10 ? "0" + game.getDate().get(Calendar.DAY_OF_MONTH) : String.valueOf(game.getDate().get(Calendar.DAY_OF_MONTH));
         String minute = game.getDate().get(Calendar.MINUTE) < 10 ? "0" + game.getDate().get(Calendar.MINUTE) : String.valueOf(game.getDate().get(Calendar.MINUTE));
         GameBet gameBet = Play.getInstance().getBet(game.getName());
+        cardsViewHolder.gameBetObject = gameBet;
         if(gameBet != null) {
-            cardsViewHolder.gameBet.setText("Tipp: " +gameBet.getHome() + ":" + gameBet.getAway());
+            cardsViewHolder.gameBet.setText("Tipp: " + gameBet.getHome() + ":" + gameBet.getAway());
         } else {
             cardsViewHolder.gameBet.setText("Tipp: _:_");
         }

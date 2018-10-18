@@ -32,7 +32,6 @@ import de.justfamouzin.play.Play;
 import de.justfamouzin.play.R;
 import de.justfamouzin.play.dialog.DialogFactory;
 import de.justfamouzin.play.dialog.RankDialog;
-import de.justfamouzin.play.dialog.WMTippDialog;
 import de.justfamouzin.play.model.Game;
 import de.justfamouzin.play.model.GameBet;
 import de.justfamouzin.play.model.Group;
@@ -90,17 +89,6 @@ public class GameMenuActivity extends AppCompatActivity {
             }
         });
         wmbet = findViewById(R.id.wmbet);
-        wmbet.setText("Klick!");
-        wmbet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(Play.getInstance().getUtil().timeLeft(Play.getInstance().getMatch(1))) {
-                    WMTippDialog wmTippDialog = DialogFactory.getWMDialog();
-                    wmTippDialog.setActivity(GameMenuActivity.this);
-                    wmTippDialog.show(getSupportFragmentManager(), "WMTippDialogTag");
-                }
-            }
-        });
         tPoints = findViewById(R.id.points);
         tPoints.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,9 +122,6 @@ public class GameMenuActivity extends AppCompatActivity {
                     } else {
                         players.add(s.getKey());
                         if (i == dataSnapshot.getChildrenCount()-1) {
-                            if(Play.getInstance().getFirebaseUser().getDisplayName().equalsIgnoreCase("Justin Wiese")) {
-                                players.add("Alena Plog");
-                            }
                             initOtherPlayers();
                         }
                     }
@@ -160,12 +145,12 @@ public class GameMenuActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Player player = new Player(dataSnapshot.getKey());
-                    for(int i = 0; i < totalMatches; i++) {
+                    for(int i = 0; i < totalMatches+1; i++) {
                         GameBet gameBet = dataSnapshot.child(String.valueOf(i)).getValue(GameBet.class);
                         if(gameBet != null) {
                             player.setPoints(player.getPoints() + getSingleBetPoints(gameBet));
                         }
-                        if (i == totalMatches - 1) {
+                        if (i == totalMatches) {
                             if(dataSnapshot.hasChild(String.valueOf(13012001))) {
                                 TeamBet teamBet = dataSnapshot.child(String.valueOf(13012001)).getValue(TeamBet.class);
                                 player.setTeamBet(teamBet);
@@ -215,7 +200,6 @@ public class GameMenuActivity extends AppCompatActivity {
                             Play.getInstance().addPlayer(player);
                         }
                         rankDialog = DialogFactory.getRankDialog();
-                        points.setText(Play.getInstance().getPoints() + "");
                         for(int l = 0; l < Play.getInstance().getPlayerList().size(); l++) {
                             if(Play.getInstance().getPlayerList().get(l).getName().equalsIgnoreCase(Play.getInstance().getFirebaseUser().getDisplayName())) {
                                 rank.setText(String.valueOf(l+1));
@@ -226,6 +210,18 @@ public class GameMenuActivity extends AppCompatActivity {
                         mViewPager = (ViewPager) findViewById(R.id.container);
                         mViewPager.setAdapter(mSectionsPagerAdapter);
                         mViewPager.setPageTransformer(true, new ZoomOutSlideTransformer());
+                        Team wm = Play.getInstance().getWm();
+                        if(wm != null) {
+                            for (Player player : Play.getInstance().getPlayerList()) {
+                                TeamBet teamBet = player.getTeamBet();
+                                if(wm.getId() == teamBet.getTeamId()) {
+                                    if(player.getName().equalsIgnoreCase(Play.getInstance().getFirebaseUser().getDisplayName())) Play.getInstance().setPoints(Play.getInstance().getPoints()+7);
+                                    player.setPoints(player.getPoints() + 7);
+                                    points.setTextColor(getResources().getColor(R.color.bet_green_right));
+                                }
+                            }
+                        }
+                        points.setText(Play.getInstance().getPoints() + "");
                         progressDialog.cancel();
                     }
                 }
@@ -280,25 +276,40 @@ public class GameMenuActivity extends AppCompatActivity {
             Group group = Play.getInstance().getGroupList().get(getArguments().getInt(ARG_SECTION_NUMBER));
             TextView groupName = rootView.findViewById(R.id.textGroupName);
             groupName.setText(group.getName());
-            StringBuilder stringBuilder = new StringBuilder();
-            for(int i = 0; i < group.getTeams().size(); i++) {
-                Team team = group.getTeams().get(i);
-                stringBuilder.append(i+1)
-                        .append(". ")
-                        .append(team.getEmoji())
-                        .append("  ")
-                        .append(team.getPlayed())
-                        .append(" | ")
-                        .append(team.getGoals())
-                        .append(":")
-                        .append(team.getAgainst())
-                        .append(" | ")
-                        .append(team.getPoints())
-                        .append(" P.")
-                        .append("\n");
-            }
             TextView teamEmojis = rootView.findViewById(R.id.teamEmojis);
-            teamEmojis.setText(stringBuilder.toString());
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i < group.getTeams().size(); i++) {
+                Team team = group.getTeams().get(i);
+                if(!group.isKo()) {
+                    stringBuilder.append(i + 1)
+                            .append(". ")
+                            .append(team.getEmoji())
+                            .append("  ")
+                            .append(team.getPlayed())
+                            .append(" | ")
+                            .append(team.getGoals())
+                            .append(":")
+                            .append(team.getAgainst())
+                            .append(" | ")
+                            .append(team.getPoints())
+                            .append(" P.")
+                            .append("\n");
+                } else {
+                    stringBuilder.append(team.getEmoji()).append(" ");
+                }
+            }
+            String emojis = stringBuilder.toString();
+            if(group.isKo()) {
+                if(emojis.length() > 8 ) {
+                    teamEmojis.setLines(2);
+                    int splitCount = (int) emojis.length() / 2;
+                    String first = emojis.substring(0, splitCount);
+                    String second = emojis.substring(splitCount);
+                    teamEmojis.setText(first + "\n" + second + "\n");
+                }
+            } else {
+                teamEmojis.setText(stringBuilder.toString());
+            }
 
             RecyclerView mRecyclerView;
             RecyclerView.Adapter mAdapter;

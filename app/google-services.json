@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "569240339639",
+    "firebase_url": "https://play-f9cd2.firebaseio.com",
+    "project_id": "play-f9cd2",
+    "storage_bucket": "play-f9cd2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:569240339639:android:f066ab099512a7d8",
+        "android_client_info": {
+          "package_name": "de.justfamouzin.play"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "569240339639-gfnc3ljrifq22pjbf9s850bft40o0av0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.justfamouzin.play",
+            "certificate_hash": "90553a2e7c4f0defcafeeb1dd011f63468367ea6"
+          }
+        },
+        {
+          "client_id": "569240339639-mc2k154p52gl3pk8b35aisuls87it3g6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBigD4_bGif-RFupW04xfqE6e0iytVAb7g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "569240339639-mc2k154p52gl3pk8b35aisuls87it3g6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

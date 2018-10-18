@@ -1,9 +1,12 @@
 package de.justfamouzin.play.util;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.common.collect.Lists;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -13,7 +16,9 @@ import com.google.gson.JsonObject;
 import java.util.Calendar;
 import java.util.List;
 
+import de.justfamouzin.play.CardsAdapter;
 import de.justfamouzin.play.Play;
+import de.justfamouzin.play.dialog.OneButtonDialog;
 import de.justfamouzin.play.model.Game;
 import de.justfamouzin.play.model.GameBet;
 import de.justfamouzin.play.model.Group;
@@ -97,23 +102,23 @@ public class Util {
 
     public List<Group> initKnockouts(JsonObject jsonObject) {
         List<Group> list = Lists.newArrayList();
+        List<Group> finished = Lists.newArrayList();
         JsonObject js = jsonObject.get("knockout").getAsJsonObject();
         String[] strings = new String[]{"round_16", "round_8", "round_4", "round_2_loser", "round_2"};
         for(int i = 0; i < strings.length; i++) {
             JsonObject jsonObject1 = js.get(strings[i]).getAsJsonObject();
             Group group = new Group(jsonObject1, true);
-            list.add(group);
-        }
-        return list;
-    }
-
-    public boolean groupsFinished() {
-        for(Group group : Play.getInstance().getGroupList()) {
-            for(Team team : group.getTeams()) {
-                if(team.getPlayed() != 4) return false;
+            if(group.isFinished()) {
+                if(i == strings.length-1) {
+                    //Play.getInstance().setWm();
+                }
+                finished.add(group);
+            } else {
+                list.add(group);
             }
         }
-        return true;
+        list.addAll(finished);
+        return list;
     }
 
     public String getDay(int day) {
@@ -121,10 +126,21 @@ public class Util {
         return days[x];
     }
 
-    public void addData(GameBet gameBet) {
+    public void addData(final GameBet gameBet, final android.app.ProgressDialog progressDialog, final OneButtonDialog oneButtonDialog, final CardsAdapter cardsAdapter, final int position) {
         DatabaseReference usersRef = ref.child(Play.getInstance().getFirebaseUser().getDisplayName());
 
-        usersRef.child(String.valueOf(gameBet.getId())).setValue(gameBet);
+        GameBet removeable = Play.getInstance().getBet(gameBet.getId());
+        Play.getInstance().getBets().remove(removeable);
+        Play.getInstance().addBet(gameBet);
+
+        usersRef.child(String.valueOf(gameBet.getId())).setValue(gameBet).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                progressDialog.cancel();
+                oneButtonDialog.closeDialog();
+                cardsAdapter.notifyItemChanged(position, gameBet);
+            }
+        });
     }
 
     public void setWMBet(TeamBet teamBet) {
@@ -156,21 +172,16 @@ public class Util {
     }
 
     public boolean timeLeft(Game game) {
-        if (game.getDate().get(Calendar.DAY_OF_MONTH) < Calendar.getInstance().get(Calendar.DAY_OF_MONTH) || game.getDate().get(Calendar.MONTH) < Calendar.getInstance().get(Calendar.MONTH))
-            return false;
-        if (game.getDate().get(Calendar.DAY_OF_MONTH) == Calendar.getInstance().get(Calendar.DAY_OF_MONTH) && game.getDate().get(Calendar.MONTH) == Calendar.getInstance().get(Calendar.MONTH)) {
+        if (game.getDate().get(Calendar.DAY_OF_MONTH) < Calendar.getInstance().get(Calendar.DAY_OF_MONTH)) {
+            if(game.getDate().get(Calendar.MONTH) < (Calendar.getInstance().get(Calendar.MONTH))) return false;
+        }
+        if (game.getDate().get(Calendar.DAY_OF_MONTH) == Calendar.getInstance().get(Calendar.DAY_OF_MONTH) && game.getDate().get(Calendar.MONTH) == (Calendar.getInstance().get(Calendar.MONTH))) {
             if (game.getDate().get(Calendar.HOUR_OF_DAY) < Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
                 return false;
             if (game.getDate().get(Calendar.HOUR_OF_DAY) == Calendar.getInstance().get(Calendar.HOUR_OF_DAY) && game.getDate().get(Calendar.MINUTE) <= Calendar.getInstance().get(Calendar.MINUTE))
                 return false;
         }
         return true;
-    }
-
-    public void setUsername() {
-        if(!Play.getInstance().getFirebaseUser().getDisplayName().startsWith("Alena")) {
-            getRef().child("user").child(Play.getInstance().getFirebaseUser().getDisplayName()).setValue(0);
-        }
     }
 
     public DatabaseReference getRef() {

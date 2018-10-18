@@ -24,6 +24,8 @@ public class Game {
     private Calendar calendar;
     private Team home;
     private Team away;
+    private String hString;
+    private String aString;
     private int matchday;
     private int home_result;
     private int away_result;
@@ -36,8 +38,18 @@ public class Game {
         Gson gson = Play.gson;
         this.name = jsonObject.get("name").getAsInt();
         this.stadium = Play.getInstance().getStadium(jsonObject.get("stadium").getAsInt());
-        this.home = Play.getInstance().getTeam(jsonObject.get("home_team").getAsInt());
-        this.away = Play.getInstance().getTeam(jsonObject.get("away_team").getAsInt());
+        this.hString = jsonObject.get("home_team").getAsString();
+        this.aString = jsonObject.get("away_team").getAsString();
+        try {
+            this.home = Play.getInstance().getTeam(Integer.parseInt(hString));
+        } catch (Exception e) {
+            this.home = null;
+        }
+        try {
+            this.away = Play.getInstance().getTeam(Integer.parseInt(aString));
+        } catch (Exception e) {
+            this.away = null;
+        }
         String sD = jsonObject.get("date").getAsString();
         String[] sdArray = sD.split("T");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -114,6 +126,14 @@ public class Game {
 
     public Team getHome() {
         return home;
+    }
+
+    public String gethString() {
+        return hString;
+    }
+
+    public String getaString() {
+        return aString;
     }
 
     public boolean isFinished() {
